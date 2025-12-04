@@ -6,4 +6,4 @@ NNCONFIG = {
                "lr": 0.001,
                "epochs": 20,
                "model_path": "model/checkpoints/ffnn.pth"
-         }
+           }

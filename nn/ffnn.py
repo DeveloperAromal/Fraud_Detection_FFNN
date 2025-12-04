@@ -16,7 +16,7 @@ class FeedForwardNN(nn.Module):
             layers.append(nn.Linear(input_dim, hidden))
             layers.append(nn.BatchNorm1d(hidden))
             
-            layers.append(nn.ReLU)
+            layers.append(nn.ReLU())
             layers.append(nn.Dropout(0.2))
             
             input_dim = hidden

@@ -1,5 +1,5 @@
 NNCONFIG = {
-               "input_size": 30,                
+               "input_size": 26,                
                "hidden_layers": [120, 64, 32], 
                "output_size": 1,                
                "batch_size": 32,

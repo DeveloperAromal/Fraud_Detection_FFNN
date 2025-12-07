@@ -5,22 +5,23 @@ import torch.nn as nn
 import torch.optim as optim
 from config.nn_config import NNCONFIG
 
-
-def train_model(model, x_train, y_train, x_test, y_test):
-    
+def train_model(model, X_train, y_train, X_val, y_val, X_test, y_test):
     criterion = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=NNCONFIG["lr"])
-
     epochs = NNCONFIG["epochs"]
 
-    x_train = x_train.float()
-    y_train = y_train.float().view(-1, 1)
-    x_test = x_test.float()
-    y_test = y_test.float().view(-1, 1)
+    x_train = X_train.float()
+    y_train = y_train.float() 
+    
+    x_val = X_val.float()
+    y_val = y_val.float() 
+    
+    x_test = X_test.float()
+    y_test = y_test.float()
 
+    best_val_loss = float("inf")
 
     for epoch in range(epochs):
-
         model.train()
         y_pred = model(x_train)
         loss = criterion(y_pred, y_train)
@@ -29,23 +30,27 @@ def train_model(model, x_train, y_train, x_test, y_test):
         loss.backward()
         optimizer.step()
 
-        if epoch % 5 == 0:
-            model.eval()
-            
-            with torch.no_grad():
-                test_pred = model(x_test)
-                test_loss = criterion(test_pred, y_test)
+        model.eval()
+        with torch.no_grad():
+            val_pred = model(x_val)
+            val_loss = criterion(val_pred, y_val)
 
-            print(f"Epoch {epoch} | Train Loss: {loss.item():.4f} | Test Loss: {test_loss.item():.4f}")
+        if epoch % 5 == 0:
+            print(f"Epoch {epoch} | Train Loss: {loss.item():.4f} | Val Loss: {val_loss.item():.4f}")
+
+        if val_loss.item() < best_val_loss:
+            best_val_loss = val_loss.item()
+            best_state = model.state_dict()
+
+    model.load_state_dict(best_state)
+
+    with torch.no_grad():
+        test_pred = model(x_test)
+        test_loss = criterion(test_pred, y_test)
+
+    print(f"\nFinal Test Loss: {test_loss.item():.4f}")
 
     os.makedirs("model/checkpoints", exist_ok=True)
-    
     torch.save(model.state_dict(), NNCONFIG["model_path"])
-    print(f"\nFinal Model saved to: {NNCONFIG['model_path']}")
+    print(f"Final Model saved to: {NNCONFIG['model_path']}")
 
-    pkl_path = NNCONFIG["model_path"].replace(".pth", ".pkl")
-    
-    model.eval()
-    with open(pkl_path, "wb") as f:
-        pickle.dump(model, f)
-    print(f"Pickle model saved to: {pkl_path}")

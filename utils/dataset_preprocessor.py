@@ -1,30 +1,24 @@
 import os
+import sys
 from typing import Optional
 
+import numpy as np
 import pandas as pd
 
 SELECTED_FEATURES = [
-                        "call_dur_mean", "call_dur_median", "call_dur_max", "call_dur_min",
-                        "call_dur_var", "call_dur_skew", "call_dur_std",
-
-                        "voc_hour_mode", "voc_hour_nunique",
-                        "voc_day_mode", "voc_day_nunique",
-                        "hour_mode", "hour_nunique",
-                        "day_mode", "day_nunique",
-
-                        "sms_count", "sms_rate",
-                        "calltype_rate",
-
-                        "arpu_mean", "arpu_var", "arpu_min", "arpu_max",
-
-                        "flow_mean", "flow_var", "flow_min", "flow_max",
-
-                        "label",
+                        "call_dur_mean", "call_dur_median", "call_dur_max", 
+                        "call_dur_min", "call_dur_var", "call_dur_skew",
+                        "call_dur_std", "voc_hour_mode", "voc_hour_nunique",
+                        "voc_day_mode", "voc_day_nunique", "hour_mode", 
+                        "hour_nunique", "day_mode", "day_nunique",
+                        "sms_count", "sms_rate", "calltype_rate",
+                        "arpu_mean", "arpu_var", "arpu_min", 
+                        "arpu_max", "flow_mean", "flow_var", 
+                        "flow_min", "flow_max", "label",
                     ]
 
 
-
-def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+def clean_dataframe(df: pd.DataFrame, missing_thresh: float = 0.95) -> pd.DataFrame:
     if df is None or len(df) == 0:
         return df
 
@@ -59,5 +53,3 @@ def preprocess_csv(input_path: str, output_dir: Optional[str] = None, missing_th
     df_clean.to_csv(out_path, index=False)
 
     return out_path
-
-

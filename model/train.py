@@ -1,5 +1,6 @@
 import os
 import torch
+import pickle
 import torch.nn as nn
 import torch.optim as optim
 from config.nn_config import NNCONFIG
@@ -38,5 +39,13 @@ def train_model(model, x_train, y_train, x_test, y_test):
             print(f"Epoch {epoch} | Train Loss: {loss.item():.4f} | Test Loss: {test_loss.item():.4f}")
 
     os.makedirs("model/checkpoints", exist_ok=True)
+    
     torch.save(model.state_dict(), NNCONFIG["model_path"])
     print(f"\nFinal Model saved to: {NNCONFIG['model_path']}")
+
+    pkl_path = NNCONFIG["model_path"].replace(".pth", ".pkl")
+    
+    model.eval()
+    with open(pkl_path, "wb") as f:
+        pickle.dump(model, f)
+    print(f"Pickle model saved to: {pkl_path}")

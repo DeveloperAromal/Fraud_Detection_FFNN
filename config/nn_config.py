@@ -5,5 +5,5 @@ NNCONFIG = {
                "batch_size": 32,
                "lr": 0.001,
                "epochs": 20,
-               "model_path": "model/checkpoints/ffnn.pth"
+               "model_path": "model/checkpoints/fraud_model.pth"
            }

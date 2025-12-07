@@ -1,9 +1,9 @@
 from model.train import train_model
 from utils.load_dataset import load_data
 from nn.ffnn import FeedForwardNN
-
 from model.predict import predict
 
+import uvicorn
 
 
 def main():
@@ -12,6 +12,11 @@ def main():
     # model = FeedForwardNN()
     # train_model(model, X_train, y_train, X_test, y_test)
 
-    predict()
-    
+    if __name__ == "__main__":
+        uvicorn.run(
+                        "api.server:app",
+                        host="127.0.0.1",
+                        port=8000,
+                        reload=True
+                )
 main()

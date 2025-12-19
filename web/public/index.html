@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fraud Detection Input</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl p-8 w-full max-w-3xl">
+      <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">
+        Fraud Detection Input
+      </h2>
+
+      <form id="fraudForm" class="space-y-6">
+
+        <div class="border-b pb-4">
+          <h3 class="text-lg font-semibold mb-2 text-gray-700">Call Duration</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <input name="call_dur_mean" type="number" step="any" value="74.18124006359301" class="p-2 border rounded" required />
+            <input name="call_dur_median" type="number" step="any" value="30" class="p-2 border rounded" required />
+            <input name="call_dur_max" type="number" step="any" value="1989" class="p-2 border rounded" required />
+            <input name="call_dur_min" type="number" step="any" value="1" class="p-2 border rounded" required />
+            <input name="call_dur_var" type="number" step="any" value="22845.94803282854" class="p-2 border rounded" required />
+            <input name="call_dur_skew" type="number" step="any" value="5.9452900596766085" class="p-2 border rounded" required />
+            <input name="call_dur_std" type="number" step="any" value="151.14876126792618" class="p-2 border rounded" required />
+          </div>
+        </div>
+
+        <div class="border-b pb-4">
+          <h3 class="text-lg font-semibold mb-2 text-gray-700">Voice</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <input name="voc_hour_mode" type="number" value="16" class="p-2 border rounded" required />
+            <input name="voc_hour_nunique" type="number" value="23" class="p-2 border rounded" required />
+            <input name="voc_day_mode" type="number" value="4" class="p-2 border rounded" required />
+            <input name="voc_day_nunique" type="number" value="31" class="p-2 border rounded" required />
+          </div>
+        </div>
+
+        <div class="border-b pb-4">
+          <h3 class="text-lg font-semibold mb-2 text-gray-700">Time</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <input name="hour_mode" type="number" value="17" class="p-2 border rounded" required />
+            <input name="hour_nunique" type="number" value="24" class="p-2 border rounded" required />
+            <input name="day_mode" type="number" value="16" class="p-2 border rounded" required />
+            <input name="day_nunique" type="number" value="31" class="p-2 border rounded" required />
+          </div>
+        </div>
+
+        <div class="border-b pb-4">
+          <h3 class="text-lg font-semibold mb-2 text-gray-700">SMS & Call</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <input name="sms_count" type="number" value="1416" class="p-2 border rounded" required />
+            <input name="sms_rate" type="number" step="any" value="6.710900473933649" class="p-2 border rounded" required />
+            <input name="calltype_rate" type="number" step="any" value="0.9957627118644068" class="p-2 border rounded" required />
+          </div>
+        </div>
+
+        <div class="border-b pb-4">
+          <h3 class="text-lg font-semibold mb-2 text-gray-700">ARPU</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <input name="arpu_mean" type="number" step="any" value="45.1325" class="p-2 border rounded" required />
+            <input name="arpu_var" type="number" step="any" value="0.14045" class="p-2 border rounded" required />
+            <input name="arpu_min" type="number" step="any" value="45.0" class="p-2 border rounded" required />
+            <input name="arpu_max" type="number" step="any" value="46.06" class="p-2 border rounded" required />
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold mb-2 text-gray-700">Flow</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <input name="flow_mean" type="number" step="any" value="13.758107009662195" class="p-2 border rounded" required />
+            <input name="flow_var" type="number" step="any" value="5317.9988995163085" class="p-2 border rounded" required />
+            <input name="flow_min" type="number" step="any" value="0.000105857849121" class="p-2 border rounded" required />
+            <input name="flow_max" type="number" step="any" value="1544.7155542373655" class="p-2 border rounded" required />
+          </div>
+        </div>
+
+        <div class="text-center mt-6">
+          <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">
+            Send
+          </button>
+        </div>
+      </form>
+
+      <pre id="result" class="mt-6 p-4 bg-gray-100 rounded text-sm overflow-x-auto"></pre>
+    </div>
+
+    <script>
+      document.getElementById("fraudForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData.entries());
+
+        const payload = { features: Object.values(data).map(Number) };
+
+        const res = await fetch("http://127.0.0.1:8000/api/v1/fraud", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await res.json();
+        document.getElementById("result").textContent = JSON.stringify(result, null, 2);
+      });
+    </script>
+  </body>
+</html>

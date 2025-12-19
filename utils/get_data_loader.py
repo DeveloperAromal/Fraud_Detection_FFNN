@@ -11,9 +11,6 @@ from utils.split_data import splited_dataset
 def load_data():
     dataset_path = os.path.abspath("data/processed/dataset.csv")
     df = pd.read_csv(dataset_path)  
-
-    print(df.shape)
-
     
     X = df.drop(columns=["label"])
     y = df["label"]

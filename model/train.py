@@ -36,7 +36,7 @@ def train_model(model, X_train, y_train, X_val, y_val, X_test, y_test):
             val_loss = criterion(val_pred, y_val)
 
         if epoch % 5 == 0:
-            print(f"Epoch {epoch} | Train Loss: {loss.item():.4f} | Val Loss: {val_loss.item():.4f}")
+            print(f"Epoch {epoch} {'' if len(str(epoch)) == 2 else ' '} | Train Loss: {loss.item():.4f} | Val Loss: {val_loss.item():.4f}")
 
         if val_loss.item() < best_val_loss:
             best_val_loss = val_loss.item()
